@@ -1,0 +1,8 @@
+*
+*/
+!.gitignore
+!bot.py
+!*.c
+!*.h
+!Makefile
+!*.md
