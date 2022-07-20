@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define FAST_ROTOR 2
 #define MIDDLE_ROTOR 1
@@ -14,6 +15,13 @@ typedef struct rotor {
     int position;
     int turnover;
 } ROTOR;
+
+typedef struct wire {
+    struct wire *input;
+    struct wire *output;
+    bool current;
+} WIRE;
+
 
 int moduloSubtract(int x, int y, int mod);
 

@@ -20,13 +20,10 @@ int configureRotors(int rotorModels[], ROTOR rotorSet[]) {
                                 {"VZBRGITYUPSDNHLXAWMJQOFECK"},
     };
 
-    // array of corresponding rotor turnover notches 
-    int turnovers[5] = {17, 5, 22, 10, 0};
-
     // for each rotor in rotors array
     for (i = 0; i < ROTOR_AMOUNT; i++) {
         strncpy(rotorSet[i].cipherAlphabet, cipherAlphabets[rotorModels[i]], ALPHA_LENGTH + 1);    // set ROTOR object's corresponding cipher alphabet
-        rotorSet[i].turnover = turnovers[rotorModels[i]];                                 // set ROTOR object's corresponding turnover notch
+        rotorSet[i].turnover = 0;
     }
 
     return S_SUCCESS;

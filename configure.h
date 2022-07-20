@@ -3,6 +3,7 @@
 
 #define CHAR_LIMIT 301
 #define ALPHA_LENGTH 26
+#define BATTERY_AMOUNT 3
 #define ROTOR_AMOUNT 3
 #define NUM_ROTOR_OPTIONS 5
 #define PLUG_LIMIT 10
