@@ -10,6 +10,8 @@
 #define MIDDLE_ROTOR 1
 #define SLOW_ROTOR 0
 
+#define BATTERY_SCRAMBLER_AMOUNT 12
+
 typedef struct rotor {
     char cipherAlphabet[27];
     int position;
@@ -18,7 +20,7 @@ typedef struct rotor {
 
 typedef struct wire {
     struct wire *input;
-    struct wire *output;
+    struct wire *output[BATTERY_SCRAMBLER_AMOUNT + 1];
     bool current;
 } WIRE;
 
