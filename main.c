@@ -5,42 +5,28 @@
 #include <ctype.h>
 #include <getopt.h>
 
-
-// Initializes input and output pointers to NULL and defaults current to false.
-int initWire(WIRE *wire) {
-    int i, length;
-    length = sizeof(wire->output)/sizeof(wire->output[0]);
-
-    // Initalize outputs to NULL
-    for (i = 0; i < length; i++) {
-        wire->output[i] = NULL;
-    }
-
-    wire->input = NULL;
-    wire->current = false;
-
-    return S_SUCCESS;
-}
-
-int addWireOutput(WIRE *source, WIRE *target) {
-    int i, length;
-    length = sizeof(source->output)/sizeof(source->output[0]);
-
-    i = 0;
-    while (i < length) {
-        if (!source->output[i]) source->output[i] = target;
-        i++;
-    }
-
-    return S_SUCCESS;
-}
-
-
-
 int main(int argc, char *argv[]) {
 
     char ciphertext[] = "RWIVTYRESXBFO";
     char crib[] = "WETTERVORHER";
+
+    // determine best menu progaramatically
+
+    // display menu in visual graph?
+
+    // determine most common letter to connec to test register
+
+    // build connections and initialize rotors
+    // - diagional plugboard
+    // - scramblers
+    // - test register
+    // - interconnections
+
+    // run
+
+    // test stop
+
+
 
     ROTOR battery[BATTERY_AMOUNT][ROTOR_AMOUNT];
     int i, j;

@@ -24,6 +24,18 @@ typedef struct wire {
     bool current;
 } WIRE;
 
+typedef struct cable {
+    bool wires[26];
+    struct cable *in;
+    struct cable *out;
+} CABLE;
+
+typedef struct commonedCable {
+    bool wires[26];
+    struct cable *in[]
+    struct cable *out;
+} COMMONEDCABLE;
+
 
 int moduloSubtract(int x, int y, int mod);
 
