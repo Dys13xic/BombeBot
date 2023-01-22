@@ -18,27 +18,16 @@ typedef struct rotor {
     int turnover;
 } ROTOR;
 
-typedef struct wire {
-    struct wire *input;
-    struct wire *output[BATTERY_SCRAMBLER_AMOUNT + 1];
-    bool current;
-} WIRE;
-
-typedef struct cable {
-    bool wires[26];
-    struct cable *in;
-    struct cable *out;
-} CABLE;
-
-typedef struct commonedCable {
-    bool wires[26];
-    struct cable *in[]
-    struct cable *out;
-} COMMONEDCABLE;
+typedef struct node {
+    bool val;
+    struct node* adj[14];
+} NODE;
 
 
 int moduloSubtract(int x, int y, int mod);
 
 char *convertMessage(ROTOR rotorSet[], char *plugboardCipher, char *message);
+
+char encodeChar(ROTOR rotorSet[], char letter);
 
 #endif

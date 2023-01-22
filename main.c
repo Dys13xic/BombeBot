@@ -7,66 +7,63 @@
 
 int main(int argc, char *argv[]) {
 
+    char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
     char ciphertext[] = "RWIVTYRESXBFO";
     char crib[] = "WETTERVORHER";
+    int length = 12;
 
-    // determine best menu progaramatically
+    // TODO Reject if ciphertext and crib letters overlap in any position.
 
-    // display menu in visual graph?
-
-    // determine most common letter to connec to test register
-
-    // build connections and initialize rotors
-    // - diagional plugboard
-    // - scramblers
-    // - test register
-    // - interconnections
-
-    // run
-
-    // test stop
+    // TODO Determine best menu programatically (for now we will not segment)
+    // - Maximize loops
+    // - Display menu in visual graph?
+    // - Add command option to override relative position of ciphertext and crib
 
 
-
-    ROTOR battery[BATTERY_AMOUNT][ROTOR_AMOUNT];
-    int i, j;
-
-    int rotorSettings[ROTOR_AMOUNT] = {0,1,2};
-
-    for (i = 0; i < BATTERY_AMOUNT; i++) {
-        configureRotors(rotorSettings, battery[i]);
-        battery[i]->position = i;
-    }
-
-    // Configure diagonal board
-    WIRE *diagonalBoard[26][26];
-
-    for (i = 0; i < ALPHA_LENGTH; i++) {
-        for (j = 0; j < ALPHA_LENGTH; j++) {
-            initWire(diagonalBoard[i][j]);
+    // TODO create basic graph (with diagonal board connections)
+    NODE valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH];
+    for (int c = 0; c < ALPHA_LENGTH; c++) {
+        for (int w = 0; w < ALPHA_LENGTH; w++) {
+            valueMatrix[c][w].val = false;
+            valueMatrix[c][w].adj[0] = &valueMatrix[w][c];
+            valueMatrix[c][w].adj[1] = NULL;
         }
     }
 
-    for (i = 0; i < ALPHA_LENGTH; i++) {
-        for (j = 0; j < ALPHA_LENGTH; j++) {
-            if (i != j) {
-                addWireOutput(diagonalBoard[i][j], diagonalBoard[j][i]);
-            }
-        }
-    }
+    // Create array for each double ended scrambler in battery
+    ROTOR doubleEndedScrambler[BATTERY_SCRAMBLER_AMOUNT][ROTOR_AMOUNT];
 
-    // TODO Connect everything together
+
+    int rotorModels[3] = {1, 2, 3};
     
+    for (int i = 0; i < length; i++) {
+        configureRotors(rotorModels, doubleEndedScrambler[i]);
+        // Initialize rotors to relative position
+        doubleEndedScrambler[i][FAST_ROTOR].position = i;
+    }
+
+    // TODO determine additional connections for each letter in menu.
+    for (int i = 0; i < length; i++) {
+        int cipherCharIndex = ciphertext[i] - 'A';
+        int cribCharIndex = crib[i] - 'A';
+
+        for (int j = 0; j < ALPHA_LENGTH; j++) {
+            char inputLetter = alphabet[j];
+            char outputLetter = encodeChar(doubleEndedScrambler[i], inputLetter);
+            
+        }
+    }
 
 
-    // convert input and print output
-    // char *output = convertMessage(rotorSet, plugboardCipher, input);
 
-    // if (output) {
-    //     printf("%s\n", output);
-    //     free(output);
-    //     output = NULL;
-    // }
+
+
+    // Determine most common letter to connect to test register
+    // - Merge sort
+    // - Iterate through once counting and replacing letter depending on frequency.
+    char testRegisterLetter = 'r';
+    int testRegister = testRegisterLetter - 'a';
 
     return EXIT_SUCCESS;
 }

@@ -73,6 +73,31 @@ static char rotorCipherReverse(ROTOR *rotor, char *alphabet, char letter) {
     return cipherLetter;
 }
 
+// Encodes a character according to Engima scrambler settings           //TODO fix this according to stripping out function below
+char encodeChar(ROTOR rotorSet[], char letter) {
+    if ( 'A' <= letter && letter <= 'Z') {
+        char alphabet[27] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int index, rotorIndex;
+
+        //stepRotors(&rotorSet[SLOW_ROTOR], &rotorSet[MIDDLE_ROTOR], &rotorSet[FAST_ROTOR]);
+
+        // rotors
+        for (rotorIndex = FAST_ROTOR; rotorIndex >= SLOW_ROTOR; rotorIndex--)
+            letter = rotorCipher(&rotorSet[rotorIndex], alphabet, letter);
+
+        // reflector
+        char reflectorB[27] = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
+        index = strIndex(alphabet, letter);
+        letter = reflectorB[index];
+        
+        // rotors reverse
+        for (rotorIndex = SLOW_ROTOR; rotorIndex <= FAST_ROTOR; rotorIndex++)
+            letter = rotorCipherReverse(&rotorSet[rotorIndex], alphabet, letter);
+        
+        return letter;
+    }
+}
+
 
 // runs the enigma machine on a given message
 char *convertMessage(ROTOR rotorSet[], char *plugBoardCipher, char *inputMessage) {
