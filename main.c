@@ -1,6 +1,8 @@
 #include "enigma.h"
 #include "configure.h"
 #include "error.h"
+#include "list.h"
+#include "graph.h"
 
 #include <ctype.h>
 #include <getopt.h>
@@ -22,12 +24,11 @@ int main(int argc, char *argv[]) {
 
 
     // TODO create basic graph (with diagonal board connections)
-    NODE valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH];
+    VERTEX valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH];
     for (int c = 0; c < ALPHA_LENGTH; c++) {
         for (int w = 0; w < ALPHA_LENGTH; w++) {
             valueMatrix[c][w].val = false;
-            valueMatrix[c][w].adj[0] = &valueMatrix[w][c];
-            valueMatrix[c][w].adj[1] = NULL;
+            append(&valueMatrix[c][w].adj, &valueMatrix[w][c]);
         }
     }
 
@@ -51,7 +52,13 @@ int main(int argc, char *argv[]) {
         for (int j = 0; j < ALPHA_LENGTH; j++) {
             char inputLetter = alphabet[j];
             char outputLetter = encodeChar(doubleEndedScrambler[i], inputLetter);
-            
+            int inputLetterIndex = inputLetter - 'A';
+            int outputLetterIndex = outputLetter - 'A';
+
+
+            // TODO ensure these are the valid indexes. 
+            append(&valueMatrix[cipherCharIndex][inputLetterIndex], &valueMatrix[cribCharIndex][outputLetterIndex]);
+            append(&valueMatrix[cribCharIndex][outputLetterIndex], &valueMatrix[cipherCharIndex][inputLetterIndex]);
         }
     }
 
