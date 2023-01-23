@@ -18,12 +18,6 @@ typedef struct rotor {
     int turnover;
 } ROTOR;
 
-typedef struct node {
-    bool val;
-    struct node* adj[14];
-} NODE;
-
-
 int moduloSubtract(int x, int y, int mod);
 
 char *convertMessage(ROTOR rotorSet[], char *plugboardCipher, char *message);
