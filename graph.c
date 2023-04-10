@@ -1,5 +1,5 @@
-#include "list.h"
 #include "graph.h"
+#include "list.h"
 #include "error.h"
 
 int traverseGraph(VERTEX* wire) {
