@@ -1,13 +1,12 @@
-#include "list.h"
 #include "graph.h"
+#include "list.h"
 #include "error.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 
 // Allocate memory and append node to end of list.
-int append(LIST* target, VERTEX* data) {
-
+int append(LIST* target, void* data) {
     NODE *newLink = malloc(sizeof(NODE));
     newLink->data = data;
     newLink->next = NULL;
@@ -17,7 +16,7 @@ int append(LIST* target, VERTEX* data) {
         target->tail = newLink;
     }
     else {
-        target->tail->next = newLink;
+        target->tail->next = newLink;       // TODO this is the line triggering seg fault on cable 21 wire 4
         target->tail = newLink;
     }
 
