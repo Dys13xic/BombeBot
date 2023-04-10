@@ -7,6 +7,57 @@
 #include <ctype.h>
 #include <getopt.h>
 
+void printGraph(VERTEX valueMatrix[26][26]) {
+    char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    // Print value matrix
+    printf("Value Matrix: \n");
+    printf("-------------\n");
+    printf("   ");
+
+    char letter = 'a';
+    for (int i = 0; i < ALPHA_LENGTH; i++) {
+        printf("%c ", letter);
+        letter += 1;
+    }
+    printf("\n");
+
+    for (int cable = 0; cable < ALPHA_LENGTH; cable++) {
+        printf("%c ", alphabet[cable]);
+        for (int wire = 0; wire < ALPHA_LENGTH; wire++) {
+            if(valueMatrix[cable][wire].val == true) {
+                printf(" 1");
+            } else {
+                printf(" 0");
+            }
+        }
+        printf("\n");
+    }
+
+    // Print adjacency lists
+    printf("\nAdjacency Lists: \n");
+    printf("----------------\n");
+    for (int cable = 0; cable < ALPHA_LENGTH; cable++) {
+        for (int wire = 0; wire < ALPHA_LENGTH; wire++) {
+            printf("%c%c: ", alphabet[cable], tolower(alphabet[wire]));
+            NODE *current = valueMatrix[cable][wire].adj.head;
+            while(current != NULL) {
+                for (int i = 0; i < ALPHA_LENGTH; i++) {
+                    int j = 0;
+                    for (j = 0; j < ALPHA_LENGTH; j++) {
+                        if(current->data == &valueMatrix[i][j]) {
+                            printf("%c%c, ", alphabet[i], tolower(alphabet[j]));
+                            break;
+                        }
+                    }
+                }
+                current = current->next;
+            }
+            printf("\n");
+        }
+    } 
+}
+
 int main(int argc, char *argv[]) {
 
     char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -16,6 +67,8 @@ int main(int argc, char *argv[]) {
     int length = 12;
 
     // TODO Reject if ciphertext and crib letters overlap in any position.
+    // Or if length is different (until later when we programatically determine menu)
+    // Or if length is greater than 12 (maybe add support for longer ciphers later)
 
     // TODO Determine best menu programatically (for now we will not segment)
     // - Maximize loops
@@ -23,24 +76,35 @@ int main(int argc, char *argv[]) {
     // - Add command option to override relative position of ciphertext and crib
 
 
-    // TODO create basic graph (with diagonal board connections)
+    // Initialize graph vertices.
     VERTEX valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH];
-    for (int c = 0; c < ALPHA_LENGTH; c++) {
-        for (int w = 0; w < ALPHA_LENGTH; w++) {
-            valueMatrix[c][w].val = false;
-            append(&valueMatrix[c][w].adj, &valueMatrix[w][c]);
+    LIST emptyList;
+    emptyList.head = NULL;
+    emptyList.tail = NULL;
+    for (int cable = 0; cable < ALPHA_LENGTH; cable++) {
+        for (int wire = 0; wire < ALPHA_LENGTH; wire++) {
+            valueMatrix[cable][wire].val = false;
+            valueMatrix[cable][wire].adj = emptyList;
         }
     }
 
-    // Create array for each double ended scrambler in battery
-    ROTOR doubleEndedScrambler[BATTERY_SCRAMBLER_AMOUNT][ROTOR_AMOUNT];
+    // Add diagonal board connections
+    for (int cable = 0; cable < ALPHA_LENGTH; cable++) {
+        for (int wire = 0; wire < ALPHA_LENGTH; wire++) {
+            if (cable != wire) {
+                append(&valueMatrix[cable][wire].adj, &valueMatrix[wire][cable]);
+            }
+        }
+    }
 
+    // Create array of double ended scramblers in battery
+    ROTOR doubleEndedScrambler[BATTERY_SCRAMBLER_AMOUNT][ROTOR_AMOUNT];
 
     int rotorModels[3] = {1, 2, 3};
     
     for (int i = 0; i < length; i++) {
+        // Initialize scrambler rotors and set relative position
         configureRotors(rotorModels, doubleEndedScrambler[i]);
-        // Initialize rotors to relative position
         doubleEndedScrambler[i][FAST_ROTOR].position = i;
     }
 
@@ -55,13 +119,13 @@ int main(int argc, char *argv[]) {
             int inputLetterIndex = inputLetter - 'A';
             int outputLetterIndex = outputLetter - 'A';
 
-
-            // TODO ensure these are the valid indexes. 
-            append(&valueMatrix[cipherCharIndex][inputLetterIndex], &valueMatrix[cribCharIndex][outputLetterIndex]);
-            append(&valueMatrix[cribCharIndex][outputLetterIndex], &valueMatrix[cipherCharIndex][inputLetterIndex]);
+            // TODO see if there is a way to halve letters we interate over.
+            append(&valueMatrix[cipherCharIndex][inputLetterIndex].adj, &valueMatrix[cribCharIndex][outputLetterIndex]);
+            //append(&valueMatrix[cribCharIndex][outputLetterIndex], &valueMatrix[cipherCharIndex][inputLetterIndex]);      Shouldn't be necessary if going through all letters in alphabet.
         }
     }
 
+    printGraph(valueMatrix);
 
 
 
@@ -69,8 +133,8 @@ int main(int argc, char *argv[]) {
     // Determine most common letter to connect to test register
     // - Merge sort
     // - Iterate through once counting and replacing letter depending on frequency.
-    char testRegisterLetter = 'r';
-    int testRegister = testRegisterLetter - 'a';
+    // char testRegisterLetter = 'r';
+    // int testRegister = testRegisterLetter - 'a';
 
     return EXIT_SUCCESS;
 }
