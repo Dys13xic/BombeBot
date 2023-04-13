@@ -24,4 +24,6 @@ char *convertMessage(ROTOR rotorSet[], char *plugboardCipher, char *message);
 
 char encodeChar(ROTOR rotorSet[], char letter);
 
+void stepRotors(ROTOR *slowRotor, ROTOR *midRotor, ROTOR *fastRotor);
+
 #endif

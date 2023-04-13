@@ -82,8 +82,9 @@ char encodeChar(ROTOR rotorSet[], char letter) {
         //stepRotors(&rotorSet[SLOW_ROTOR], &rotorSet[MIDDLE_ROTOR], &rotorSet[FAST_ROTOR]);
 
         // rotors
-        for (rotorIndex = FAST_ROTOR; rotorIndex >= SLOW_ROTOR; rotorIndex--)
+        for (rotorIndex = FAST_ROTOR; rotorIndex >= SLOW_ROTOR; rotorIndex--) {
             letter = rotorCipher(&rotorSet[rotorIndex], alphabet, letter);
+        }
 
         // reflector
         char reflectorB[27] = "YRUHQSLDPXNGOKMIEBFZCWVJAT";
@@ -91,8 +92,9 @@ char encodeChar(ROTOR rotorSet[], char letter) {
         letter = reflectorB[index];
         
         // rotors reverse
-        for (rotorIndex = SLOW_ROTOR; rotorIndex <= FAST_ROTOR; rotorIndex++)
+        for (rotorIndex = SLOW_ROTOR; rotorIndex <= FAST_ROTOR; rotorIndex++) {
             letter = rotorCipherReverse(&rotorSet[rotorIndex], alphabet, letter);
+        }
         
         return letter;
     }
