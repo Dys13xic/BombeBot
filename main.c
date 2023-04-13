@@ -7,7 +7,7 @@
 #include <ctype.h>
 #include <getopt.h>
 
-void printGraph(VERTEX valueMatrix[26][26]) {
+void printGraph(VERTEX valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH]) {
     char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     // Print value matrix
@@ -62,18 +62,45 @@ int main(int argc, char *argv[]) {
 
     char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-    char ciphertext[] = "RWIVTYRESXBFO";
+    char ciphertext[] = "RWIVTYRESXBF";
     char crib[] = "WETTERVORHER";
     int length = 12;
 
-    // TODO Reject if ciphertext and crib letters overlap in any position.
-    // Or if length is different (until later when we programatically determine menu)
-    // Or if length is greater than 12 (maybe add support for longer ciphers later)
+    // TODO Add support for cipher/crib pairs less than 12 characters
 
     // TODO Determine best menu programatically (for now we will not segment)
-    // - Maximize loops
-    // - Display menu in visual graph?
+    // - Maximize length up to 12 characters
+    // - No crashes
+    // - Maximize loops - Will likely need to re-use graph.c
+
+    // TODO later additions
+    // - Display menu in visual graph Ex.
+    // 
+    //   +-A--+                                              
+    //   4    |                                            
+    //   +-B  6
+    //        |                                                                                            
+    //     C+-+                                              
+    //      |
+    //      3
+    //      |                                             
+    //     D+
+    //
+    //
+    //      B    C    D -------\
+    //       \   |   /          \
+    //        2  3  4            12
+    //         \ | /              \
+    //  E --5--- A ---6-- F --9--- K
+    //         / | \
+    //        7  8  9
+    //       /   |   \
+    //      G    H    I
+    //
+    //
+    //
     // - Add command option to override relative position of ciphertext and crib
+    // - Support for menus > 12 characters
 
 
     // Initialize graph vertices.
@@ -99,16 +126,18 @@ int main(int argc, char *argv[]) {
 
     // Create array of double ended scramblers in battery
     ROTOR doubleEndedScrambler[BATTERY_SCRAMBLER_AMOUNT][ROTOR_AMOUNT];
-
-    int rotorModels[3] = {1, 2, 3};
+    // TODO allow override of starting rotorModels (will have to keep track of tested combinations).
+    int rotorModels[3] = {0, 1, 2};
     
+    // Initialize scrambler rotors and set relative position
     for (int i = 0; i < length; i++) {
-        // Initialize scrambler rotors and set relative position
         configureRotors(rotorModels, doubleEndedScrambler[i]);
-        doubleEndedScrambler[i][FAST_ROTOR].position = i;
+        // TODO allow override of starting rotor positions (add logic to prevent accidental redoing of work).
+        // TODO default starting position to (slow, middle, fast) Z, Z, Z + offset
+        doubleEndedScrambler[i][FAST_ROTOR].position = i + 1;       // +1 offset as encodeChar does not step rotors.
     }
 
-    // TODO determine additional connections for each letter in menu.
+    // Determine additional connections for each letter in menu.
     for (int i = 0; i < length; i++) {
         int cipherCharIndex = ciphertext[i] - 'A';
         int cribCharIndex = crib[i] - 'A';
@@ -125,16 +154,32 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // TODO Determine most common letter to connect to test register
+    // - Merge sort Note: O(nlog(n)) time complexity may not be worth it for such a small dataset.
+    // - Iterate through once counting and replacing letter depending on frequency.
+    char testRegisterLetter = 'R';
+    int testRegister = testRegisterLetter - 'A';
+
+    // TODO Assume which letter the test register is steckered to
+    // Note: do I need to ensure there is at least one adjacent vertex?
+    char assumptionLetter = 'B';
+    int assumptionLetterIndex = assumptionLetter - 'A';
+
+    // Propagate testRegister signal through scrambler connected wires.
+    traverseGraph(&valueMatrix[testRegister][assumptionLetterIndex]);
+
     printGraph(valueMatrix);
 
+    // TODO evaluate matrix results and derive conclusions
 
 
-
-    // Determine most common letter to connect to test register
-    // - Merge sort
-    // - Iterate through once counting and replacing letter depending on frequency.
-    // char testRegisterLetter = 'r';
-    // int testRegister = testRegisterLetter - 'a';
+    // Clear valueMatrix vertex value and adjacency list (retain diagonal board connections)
+    for (int cable = 0; cable < ALPHA_LENGTH; cable++) {
+        for (int wire = 0; wire < ALPHA_LENGTH; wire++) {
+            clean(&valueMatrix[cable][wire].adj, cable != wire);
+            valueMatrix[cable][wire].val = 0;
+        }
+    }
 
     return EXIT_SUCCESS;
 }
