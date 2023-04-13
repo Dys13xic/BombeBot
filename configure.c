@@ -24,7 +24,7 @@ int configureRotors(int rotorModels[], ROTOR rotorSet[]) {
     for (i = 0; i < ROTOR_AMOUNT; i++) {
         strncpy(rotorSet[i].cipherAlphabet, cipherAlphabets[rotorModels[i]], ALPHA_LENGTH + 1);    // set ROTOR object's corresponding cipher alphabet
         rotorSet[i].position = 0;
-        rotorSet[i].turnover = 0;
+        rotorSet[i].turnover = 24;  // Bombe machine fast and middle rotor turnover on Y
     }
 
     return S_SUCCESS;
