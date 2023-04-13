@@ -12,6 +12,6 @@ typedef struct list {
 } LIST;
 
 int append(LIST* target, void* data);
-int clean(LIST* target);
+int clean(LIST* target, bool retainListHead);
 
 #endif

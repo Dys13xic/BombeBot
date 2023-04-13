@@ -16,28 +16,36 @@ int append(LIST* target, void* data) {
         target->tail = newLink;
     }
     else {
-        target->tail->next = newLink;       // TODO this is the line triggering seg fault on cable 21 wire 4
+        target->tail->next = newLink;
         target->tail = newLink;
     }
 
     return S_SUCCESS;
 }
 
-// De-allocate memory for adjacency list nodes determined through double-ended scrambler. Leaves diagonal board node (List head).
-int clean(LIST* target) {
-    if(target->head && target->head != target->tail) {
-        NODE* current = target->head->next;
-        NODE* prev = target->head;
-        prev->next = NULL;
+// De-allocate memory for adjacency list nodes determined through double-ended scrambler.
+// Passing true into the retainListHead parameter will prevent the freeing of list's head node.
+int clean(LIST* target, bool retainListHead) {
 
-        while(current) {
-            free(prev);
-            prev = current;
+    if(target->head) {
+        NODE* current = target->head;
+        NODE* temp = NULL;
+
+        if(retainListHead) {
+            target->head->next = NULL;
+            // Skip over initial node.
             current = current->next;
         }
+        else {
+            target->head = NULL;
+        }
+        target->tail = target->head;
 
-        target->tail = target->head; 
+        while(current) {
+            temp = current;
+            current = current->next;
+            free(temp);
+        }
     }
-    
     return S_SUCCESS;
 }
