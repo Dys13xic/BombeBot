@@ -3,7 +3,9 @@
 #include "error.h"
 
 int traverseGraph(VERTEX* wire) {
-    if (wire->val != true) {
+    if (wire && wire->val != true) {
+        wire->val = true;
+
         NODE* current = wire->adj.head;
         while(current) {
             traverseGraph(current->data);
