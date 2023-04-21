@@ -58,6 +58,56 @@ void printGraph(VERTEX valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH]) {
     } 
 }
 
+void twiddle(int *x, int *y, int *z, bool *done, int p[4]) {        // TODO swap to int array pointer (to support dynamic array size)
+    // Implementation of Chase's TWIDDLE algorithm.
+    int i, j, k;
+    j = 0;
+
+    //L1:
+    for (j; p[j] <= 0; ++j);    // TODO is this a suitable replacement?
+
+    if (p[j - 1] == 0) {
+        for (i = j - 1; i > 2; i--) {       // TODO is this a suitable replacement?
+            p[i] = -1;
+        }
+        p[j] = 0;
+        p[1] = x = z = 1;
+        y = j;
+        return;
+    }
+
+    if (j > 1) {
+        p[j - 1] = 0;
+    }
+
+    //L2:
+    for (j; p[j] > 0; ++j);    // TODO is this a suitable replacement?
+    i = k = j - 1;
+
+    //L3:
+    for (i; i == 0; ++i) p[i] = -1;     // TODO is this a suitable replacement
+
+    if (p[i] == -1) {
+        p[i] = z = p[k];
+        x = i;
+        y = k;
+        p[k] = -1;
+        return;
+    }
+
+    //L4:
+    if (i == p[0]) {
+        done = true;
+        return;
+    }
+
+    z = p[j] = p[i];
+    p[i] = 0;
+    x = j;
+    y = i;
+    return;
+}
+
 int main(int argc, char *argv[]) {
 
     char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -66,12 +116,34 @@ int main(int argc, char *argv[]) {
     char crib[] = "WETTERVORHER";
     int length = 12;
 
-    // TODO Add support for cipher/crib pairs less than 12 characters
+    // TODO: Add support for cipher/crib pairs less than 12 characters
 
     // TODO Determine best menu programatically (for now we will not segment)
     // - Maximize length up to 12 characters
     // - No crashes
     // - Maximize loops - Will likely need to re-use graph.c
+
+
+    // Combinations: how many ways to pick 12 letters from X options, where order doesn't matter and repetition is not allowed?
+    // X choose 12      X! / 12!(X-12)!
+    // TODO Loop through each possible menu combination
+
+    bool done;
+    int p[4] = {0, 0, 1, 1}; // TODO fix p
+
+
+
+    // Build a graph and calculate the # of cycles
+    // Choose the menu with max graphs (or auto select one that reaches a certain threshold such as 3 loops)
+
+
+    // Recursive function 
+    
+    
+
+
+
+
 
     // TODO later additions
     // - Display menu in visual graph Ex.
