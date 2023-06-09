@@ -58,21 +58,19 @@ void printGraph(VERTEX valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH]) {
     } 
 }
 
-void twiddle(int *x, int *y, int *z, bool *done, int p[4]) {        // TODO swap to int array pointer (to support dynamic array size)
+void twiddle(int *x, int *y, int *z, bool *done, int *p) {        // TODO swap to int array pointer (to support dynamic array size)
     // Implementation of Chase's TWIDDLE algorithm.
     int i, j, k;
-    j = 0;
+    j = 1;
 
     //L1:
-    for (j; p[j] <= 0; ++j);    // TODO is this a suitable replacement?
+    for (j; p[j] <= 0; j++);
 
     if (p[j - 1] == 0) {
-        for (i = j - 1; i > 2; i--) {       // TODO is this a suitable replacement?
-            p[i] = -1;
-        }
+        for (i = j - 1; i > 1; i--) { p[i] = -1; }
         p[j] = 0;
-        p[1] = x = z = 1;
-        y = j;
+        p[1] = *x = *z = 1;
+        *y = j;
         return;
     }
 
@@ -81,30 +79,33 @@ void twiddle(int *x, int *y, int *z, bool *done, int p[4]) {        // TODO swap
     }
 
     //L2:
-    for (j; p[j] > 0; ++j);    // TODO is this a suitable replacement?
+    j++;
+    for (j; p[j] > 0; j++);
     i = k = j - 1;
 
     //L3:
-    for (i; i == 0; ++i) p[i] = -1;     // TODO is this a suitable replacement
+    i++;
+    for (i; p[i] == 0; i++) p[i] = -1;
 
     if (p[i] == -1) {
-        p[i] = z = p[k];
-        x = i;
-        y = k;
+        p[i] = *z = p[k];
+        *x = i;
+        *y = k;
         p[k] = -1;
         return;
     }
 
-    //L4:
     if (i == p[0]) {
-        done = true;
+        *done = true;
         return;
     }
 
-    z = p[j] = p[i];
+    *z = p[j] = p[i];
     p[i] = 0;
-    x = j;
-    y = i;
+    *x = j;
+    *y = i;
+    
+    //L4:
     return;
 }
 
@@ -128,9 +129,51 @@ int main(int argc, char *argv[]) {
     // X choose 12      X! / 12!(X-12)!
     // TODO Loop through each possible menu combination
 
-    bool done;
-    int p[4] = {0, 0, 1, 1}; // TODO fix p
+    // Test choose 2 out of 4
+    // ------------------------------------------------ test
+    
+    int b[20] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    int p[22] = {21, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2};
 
+    // int b[5] = {0, 0, 0, 1, 1};
+    // int p[7] = {6, 0, 0, 0, 1, 1, -2};
+
+    int x, y, z;
+    bool done = false;
+    int test = 1;
+    while(!done) {
+        // Print current combination
+        // printf("[b]: %d, %d, %d, %d\n", b[0], b[1], b[2], b[3]);
+        printf("%d\n", test);
+        test++;
+        // printf("%d, %d, %d, %d, %d\n", b[0], b[1], b[2], b[3], b[4]);
+
+
+        // Debug vars
+        // printf("- [x]: %d, [y]: %d, [z]: %d\n", x, y, z);
+        // printf("- [p]: %d, %d, %d, %d, %d, %d, %d\n", p[0], p[1], p[2], p[3], p[4], p[5], p[6]);
+        // printf("\n");
+
+        // Run twiddle algorithm
+        twiddle(&x, &y, &z, &done, p);
+
+        // Generate new combination
+        b[x-1] = 1;
+        b[y-1] = 0;
+
+        // Decrement failsafe
+    }
+    // printf("Residual Values - DOESN'T COUNT\n");
+    // printf("----------------------------------\n");
+    // printf("[b]: %d, %d, %d, %d\n", b[0], b[1], b[2], b[3]);
+
+    // // Debug vars
+    // printf("- [x]: %d, [y]: %d, [z]: %d\n", x, y, z);
+    // printf("- [p]: %d, %d, %d, %d, %d, %d\n", p[0], p[1], p[2], p[3], p[4], p[5]);
+    // printf("\n");
+
+    exit(1);
+    // ------------------------------------------------ test
 
 
     // Build a graph and calculate the # of cycles
