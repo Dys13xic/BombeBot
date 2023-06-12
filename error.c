@@ -39,7 +39,9 @@ void printError(int errorCode, char *functionName) {
                             "An invalid character was input",
                             "An argument of invalid length was input",
                             "An invalid number of sub-arguments was input",
-                            "Invalid repetition of a sub-argument"
+                            "Invalid repetition of a sub-argument",
+                            "A crash was detected between the provided cipher and crib",
+                            "A mismatch was detected between the length of provided cipher and crib"
                             };
 
     printf("ERROR in %s: %s.\n\n", functionName, errorMessages[errorCode]);

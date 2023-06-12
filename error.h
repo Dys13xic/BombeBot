@@ -11,6 +11,8 @@
 #define S_INVALID_LENGTH 5
 #define S_INVALID_SUBARGUMENT_NUMBER 6
 #define S_INVALID_SUBARGUMENT_REPETITION 7
+#define S_CRASH 8
+#define S_MISMATCHED_LENGTH 9
 
 
 void printUsage(char *programName, bool error);

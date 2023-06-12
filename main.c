@@ -112,10 +112,25 @@ void twiddle(int *x, int *y, int *z, bool *done, int *p) {        // TODO swap t
 int main(int argc, char *argv[]) {
 
     char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    char cipher[CHAR_LIMIT];
+    char crib[CHAR_LIMIT];
 
-    char ciphertext[] = "RWIVTYRESXBF";
-    char crib[] = "WETTERVORHER";
-    int length = 12;
+    // Load command line parameters
+    // TODO implement GetOpt
+    strncpy(cipher, argv[1], CHAR_LIMIT);
+    strncpy(crib, argv[2], CHAR_LIMIT);
+    cipher[CHAR_LIMIT - 1] = '\0';
+    crib[CHAR_LIMIT - 1] = '\0';
+
+    // Detect crib/cipher crashes
+    int i = 0;
+    while(cipher[i] != '\0' && crib[i] !='\0') {
+        if(cipher[i] == crib[i]) return S_CRASH;
+        i++;
+    }
+    // Determine crib/cipher length
+    if(cipher[i] != '\0' || crib[i] !='\0') return S_INVALID_LENGTH;
+    int length = i + 1;
 
     // TODO: Add support for cipher/crib pairs less than 12 characters
 
@@ -214,7 +229,7 @@ int main(int argc, char *argv[]) {
     //
     //
     //
-    // - Add command option to override relative position of ciphertext and crib
+    // - Add command option to override relative position of cipher and crib
     // - Support for menus > 12 characters
 
 
@@ -254,7 +269,7 @@ int main(int argc, char *argv[]) {
 
     // Determine additional connections for each letter in menu.
     for (int i = 0; i < length; i++) {
-        int cipherCharIndex = ciphertext[i] - 'A';
+        int cipherCharIndex = cipher[i] - 'A';
         int cribCharIndex = crib[i] - 'A';
 
         for (int j = 0; j < ALPHA_LENGTH; j++) {
