@@ -58,69 +58,46 @@ void printGraph(VERTEX valueMatrix[ALPHA_LENGTH][ALPHA_LENGTH]) {
     } 
 }
 
-void twiddle(int *x, int *y, int *z, bool *done, int *p) {        // TODO swap to int array pointer (to support dynamic array size)
-    // Implementation of Chase's TWIDDLE algorithm.
-    int i, j, k;
-    j = 1;
-
-    //L1:
-    for (j; p[j] <= 0; j++);
-
-    if (p[j - 1] == 0) {
-        for (i = j - 1; i > 1; i--) { p[i] = -1; }
-        p[j] = 0;
-        p[1] = *x = *z = 1;
-        *y = j;
-        return;
-    }
-
-    if (j > 1) {
-        p[j - 1] = 0;
-    }
-
-    //L2:
-    j++;
-    for (j; p[j] > 0; j++);
-    i = k = j - 1;
-
-    //L3:
-    i++;
-    for (i; p[i] == 0; i++) p[i] = -1;
-
-    if (p[i] == -1) {
-        p[i] = *z = p[k];
-        *x = i;
-        *y = k;
-        p[k] = -1;
-        return;
-    }
-
-    if (i == p[0]) {
-        *done = true;
-        return;
-    }
-
-    *z = p[j] = p[i];
-    p[i] = 0;
-    *x = j;
-    *y = i;
-    
-    //L4:
-    return;
-}
-
 int main(int argc, char *argv[]) {
-
+    // Init vars.
     char alphabet[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    char cipher[CHAR_LIMIT];
-    char crib[CHAR_LIMIT];
+    char cipher[CHAR_LIMIT]; char crib[CHAR_LIMIT];
+    int flag;
 
-    // Load command line parameters
-    // TODO implement GetOpt
-    strncpy(cipher, argv[1], CHAR_LIMIT);
-    strncpy(crib, argv[2], CHAR_LIMIT);
-    cipher[CHAR_LIMIT - 1] = '\0';
-    crib[CHAR_LIMIT - 1] = '\0';
+    // TODO replace program name with argv[0]
+    char programName[] = "!bombe";
+
+    // Configure GetOpts
+    int long_index = 0;
+    static struct option long_options[] = {
+        {"help",        no_argument,        0,  'h' },
+        {0,             0,                  0,   0  }
+    };
+
+    // While there are arguments with options flags
+    while ((flag = getopt_long(argc, argv, "h", long_options, &long_index)) != -1) {
+
+        switch(flag) {
+            case 'h': {
+                printUsage(programName, false);
+                exit(EXIT_SUCCESS);
+            }
+            default: errorExit(S_INVALID_FLAG, "main()", programName, true);
+        }
+    }
+
+    // If there are non-flag arguments copy them to cipher and crib buffers
+    if (optind + 1 < argc) {
+        strncpy(cipher, argv[optind], CHAR_LIMIT);
+        strncpy(crib, argv[optind + 1], CHAR_LIMIT);
+        cipher[CHAR_LIMIT - 1] = '\0';
+        crib[CHAR_LIMIT - 1] = '\0';
+    }
+    else {
+        printf("ERROR: incorrect number of arguments specified. \n");
+        printUsage(programName, true);
+        exit(EXIT_FAILURE);
+    }
 
     // Detect crib/cipher crashes
     int i = 0;
@@ -134,15 +111,12 @@ int main(int argc, char *argv[]) {
 
     // TODO: Add support for cipher/crib pairs less than 12 characters
 
-    // TODO Determine best menu programatically (for now we will not segment)
-    // - Maximize length up to 12 characters
-    // - No crashes
+    // TODO Determine best menu programatically
+    // - Loop through each possible menu combination (pick m from n objects where order doesn't matter)
     // - Maximize loops - Will likely need to re-use graph.c
+    //      - Allow GetOpt to halt testing once a menu with X cycles is found.
 
-
-    // Combinations: how many ways to pick 12 letters from X options, where order doesn't matter and repetition is not allowed?
-    // X choose 12      X! / 12!(X-12)!
-    // TODO Loop through each possible menu combination
+    // TODO create menu generation function
 
     // Test choose 2 out of 4
     // ------------------------------------------------ test
@@ -192,7 +166,7 @@ int main(int argc, char *argv[]) {
 
 
     // Build a graph and calculate the # of cycles
-    // Choose the menu with max graphs (or auto select one that reaches a certain threshold such as 3 loops)
+    // Choose the menu with most loops (or auto select one that reaches a certain threshold such as 3 loops)
 
 
     // Recursive function 

@@ -205,3 +205,54 @@ int validateNumericSettings(char **arg, int numericSettings[], int size) {
     return S_SUCCESS;
 }
 
+
+// Implementation of Chase's TWIDDLE algorithm.
+void twiddle(int *x, int *y, int *z, bool *done, int *p) {
+    int i, j, k;
+    j = 1;
+
+    //L1:
+    for (j; p[j] <= 0; j++);
+
+    if (p[j - 1] == 0) {
+        for (i = j - 1; i > 1; i--) { p[i] = -1; }
+        p[j] = 0;
+        p[1] = *x = *z = 1;
+        *y = j;
+        return;
+    }
+
+    if (j > 1) {
+        p[j - 1] = 0;
+    }
+
+    //L2:
+    j++;
+    for (j; p[j] > 0; j++);
+    i = k = j - 1;
+
+    //L3:
+    i++;
+    for (i; p[i] == 0; i++) p[i] = -1;
+
+    if (p[i] == -1) {
+        p[i] = *z = p[k];
+        *x = i;
+        *y = k;
+        p[k] = -1;
+        return;
+    }
+
+    if (i == p[0]) {
+        *done = true;
+        return;
+    }
+
+    *z = p[j] = p[i];
+    p[i] = 0;
+    *x = j;
+    *y = i;
+    
+    //L4:
+    return;
+}
