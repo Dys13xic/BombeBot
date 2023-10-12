@@ -9,6 +9,7 @@
 #define PLUG_LIMIT 10
 #define MAX_ARG_SEGMENTS 10
 #define ARG_SEGMENT_LENGTH 3
+#define MENU_LIMIT 12
 
 
 int configureRotors(int rotors[], ROTOR rotorSet[]);

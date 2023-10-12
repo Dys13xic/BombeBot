@@ -256,3 +256,65 @@ void twiddle(int *x, int *y, int *z, bool *done, int *p) {
     //L4:
     return;
 }
+
+// Determine the menu that maximizes loops
+void configureMenu(char* cipher, char* crib, int length) {
+
+    // TODO Configure b and p according to cipher and crib
+
+    // b[1:n]
+    // b[1] through b[n-m] equal to 0, and b[n - m + 1] through b[n] equal to 1
+
+    // p[0:n + 1]
+    // p[0] is set equal to n + 1, and p[n + 1] is set equal to -2.
+    // p[1] through p[n - m] are set equal to 0. p[n - m + 1] through p[n] are set equal, respectively to 1 through m.
+
+    int *b = (int*) malloc(sizeof(int) * length);
+    int *p = (int*) malloc(sizeof(int) * (length + 2));
+
+    for (int i = 0; i < length; i++) {
+        if(i < length - MENU_LIMIT) {
+            b[i] = 0;
+        }
+        else  {
+            b[i] = 1;
+        }
+    }
+
+    // int b[20] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    // int p[22] = {21, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2};
+    int x, y, z;
+    bool done = false;
+
+    while(!done) {
+        // Run twiddle algorithm
+        twiddle(&x, &y, &z, &done, p);
+
+        // Generate new combination
+        b[x-1] = 1;
+        b[y-1] = 0;
+
+        // TODO do your thing with combinations
+    }
+
+
+
+
+
+
+
+
+
+
+    // For all possible menu combinations
+
+    // Create graph nodes for all letters in cipher and crib
+
+    // Create links between graph nodes
+
+    // Pick a random node and run DFS looking for back-edges
+
+    // 
+
+    return;
+}

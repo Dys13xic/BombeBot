@@ -14,3 +14,9 @@ int traverseGraph(VERTEX* wire) {
     }
     return S_SUCCESS;
 }
+
+int cycleCount(LIST* vertices) {
+    int vertexCount = sizeof(vertices)/sizeof(LIST);
+    // TODO continue implementation
+    
+}
