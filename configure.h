@@ -24,4 +24,6 @@ char **splitArg(char *str, int *size);
 
 int validateNumericSettings(char **arg, int numericSettings[], int size);
 
+void configureMenu(char *cipher, char *crib, int length);
+
 #endif

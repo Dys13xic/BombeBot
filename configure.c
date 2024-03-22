@@ -260,7 +260,7 @@ void twiddle(int *x, int *y, int *z, bool *done, int *p) {
 // Determine the menu that maximizes loops
 void configureMenu(char* cipher, char* crib, int length) {
 
-    // TODO Configure b and p according to cipher and crib
+    // TODO add checks to ensure 0 < m <= n
 
     // b[1:n]
     // b[1] through b[n-m] equal to 0, and b[n - m + 1] through b[n] equal to 1
@@ -269,9 +269,14 @@ void configureMenu(char* cipher, char* crib, int length) {
     // p[0] is set equal to n + 1, and p[n + 1] is set equal to -2.
     // p[1] through p[n - m] are set equal to 0. p[n - m + 1] through p[n] are set equal, respectively to 1 through m.
 
+    // Ex. 20 (n) choose 12 (m)
+    // int b[20] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    // int p[22] = {21, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, -2};
+
     int *b = (int*) malloc(sizeof(int) * length);
     int *p = (int*) malloc(sizeof(int) * (length + 2));
 
+    // Initialize combination array
     for (int i = 0; i < length; i++) {
         if(i < length - MENU_LIMIT) {
             b[i] = 0;
@@ -281,12 +286,41 @@ void configureMenu(char* cipher, char* crib, int length) {
         }
     }
 
-    // int b[20] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-    // int p[22] = {21, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2};
+    // printf("b: ");
+    // for (int i = 0; i < length; i++) {
+    //     printf("%d, ", b[i]);
+    // }
+    // printf("\n");
+
+    // Initialize auxillary array
+    p[0] = length + 1;
+    p[length + 1] = -2;
+    for (int i = 1; i < length + 1; i++) {
+        if(i <= length - MENU_LIMIT) {
+            p[i] = 0;
+        }
+        else {
+            p[i] = i - (length - MENU_LIMIT);
+        }
+    }
+
+    // printf("p: ");
+    // for (int i = 0; i < length + 2; i++) {
+    //     printf("%d, ", p[i]);
+    // }
+    // printf("\n");
+
     int x, y, z;
     bool done = false;
+    int test = 1;
 
+    // TODO Resolve SegFault on input where m = n ex: ./a.out WETTERVORHER RRHKJKNJXEUW
+
+    // Compute combinations
     while(!done) {
+        printf("%d \n", test);
+        test++;
+
         // Run twiddle algorithm
         twiddle(&x, &y, &z, &done, p);
 
@@ -301,18 +335,13 @@ void configureMenu(char* cipher, char* crib, int length) {
 
 
 
-
-
-
-
-
     // For all possible menu combinations
 
     // Create graph nodes for all letters in cipher and crib
 
     // Create links between graph nodes
 
-    // Pick a random node and run DFS looking for back-edges
+    // Pick a random node and run DFS looking for back-edges (loops)
 
     // 
 

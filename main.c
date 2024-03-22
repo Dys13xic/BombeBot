@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     }
     // Determine crib/cipher length
     if(cipher[i] != '\0' || crib[i] !='\0') return S_INVALID_LENGTH;
-    int length = i + 1;
+    int length = i;
 
     // TODO: Add support for cipher/crib pairs less than 12 characters
 
@@ -117,50 +117,8 @@ int main(int argc, char *argv[]) {
     //      - Allow GetOpt to halt testing once a menu with X cycles is found.
 
     // TODO create menu generation function
-
-    // Test choose 2 out of 4
     // ------------------------------------------------ test
-    
-    int b[20] = {0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-    int p[22] = {21, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, -2};
-
-    // int b[5] = {0, 0, 0, 1, 1};
-    // int p[7] = {6, 0, 0, 0, 1, 1, -2};
-
-    int x, y, z;
-    bool done = false;
-    int test = 1;
-    while(!done) {
-        // Print current combination
-        // printf("[b]: %d, %d, %d, %d\n", b[0], b[1], b[2], b[3]);
-        printf("%d\n", test);
-        test++;
-        // printf("%d, %d, %d, %d, %d\n", b[0], b[1], b[2], b[3], b[4]);
-
-
-        // Debug vars
-        // printf("- [x]: %d, [y]: %d, [z]: %d\n", x, y, z);
-        // printf("- [p]: %d, %d, %d, %d, %d, %d, %d\n", p[0], p[1], p[2], p[3], p[4], p[5], p[6]);
-        // printf("\n");
-
-        // Run twiddle algorithm
-        twiddle(&x, &y, &z, &done, p);
-
-        // Generate new combination
-        b[x-1] = 1;
-        b[y-1] = 0;
-
-        // Decrement failsafe
-    }
-    // printf("Residual Values - DOESN'T COUNT\n");
-    // printf("----------------------------------\n");
-    // printf("[b]: %d, %d, %d, %d\n", b[0], b[1], b[2], b[3]);
-
-    // // Debug vars
-    // printf("- [x]: %d, [y]: %d, [z]: %d\n", x, y, z);
-    // printf("- [p]: %d, %d, %d, %d, %d, %d\n", p[0], p[1], p[2], p[3], p[4], p[5]);
-    // printf("\n");
-
+    configureMenu(cipher, crib, length);
     exit(1);
     // ------------------------------------------------ test
 
